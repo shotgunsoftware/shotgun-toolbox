@@ -22,9 +22,9 @@ s3a=($s3a_oregon $s3a_tokyo $s3a_ireland)
 function test_header {
     title=$1
     echo
-    echo "#####"
+    echo "################################################################"
     echo "# $title"
-    echo "#####"
+    echo "################################################################"
 }
 
 # Simply ping google dns to get a feel of network latency.
