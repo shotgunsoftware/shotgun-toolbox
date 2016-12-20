@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+# Bash script that run multiple tests to access the state of the Shotgun service.
+# Linux and MacOS support only.
 
 # Globals
+# Warning: These IPs are subject to change.
 sg_lbs_ip=('74.50.63.109' '74.50.63.111')
 sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.')
 
@@ -45,6 +48,7 @@ function speedtest {
     fi
 }
 
+# Execute speedtest using latest version of speedtest-cli. Fall-back on cached version on failure.
 function speedtest_exec {
     # Try to get latest version
     echo "Trying to fetch latest version of speedtest-cli..."
@@ -107,15 +111,15 @@ function showUsage {
     echo "Usage: bash shotgun_connectivity_test.sh [options]"
     echo "Test connectivity to the Shotgun end-points."
     echo -e "\t[--all]               Test connectivity to all end-points. Default."
-    echo -e "\t[--cdn]               Test connectivity to Shotgun Geolocated Network Accelerator (CDNetworks)."
+    echo -e "\t[--cdn]               Test connectivity to Shotgun Web Acceleration Service (CDNetworks)."
     echo -e "\t[--lb]                Test connectivity to Shotgun load balancers."
     echo -e "\t[--s3]                Test connectivity to Shotgun S3 Buckets."
     echo -e "\t[--s3a]               Test connectivity to Shotgun S3 Accelerated Transfer Buckets."
-    echo -e "\t[--speedtest          Run speedtest."
+    echo -e "\t[--speedtest]         Run speedtest."
     echo -e "\t[--geo_oregon]        Spefically test for the oregon geo."
     echo -e "\t[--geo_tokyo]         Spefically test for the tokyo geo."
     echo -e "\t[--geo_ireland]       Spefically test for the ireland geo."
-    echo -e "\t[-h,--help,--usage]   Display help and exit."
+    echo -e "\t[-h,--help,--usage]   Display help."
     echo -e "\t[-v,--verbose]        Print commands before executing them."
 }
 
