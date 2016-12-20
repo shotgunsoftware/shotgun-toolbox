@@ -196,7 +196,7 @@ if [ -n "$do_speedtest" ]; then
 fi
 
 if [ -n "$do_test_lbs" ]; then
-    test_s3
+    test_lbs
 fi
 
 if [ -n "$do_test_cdnetworks" ]; then
