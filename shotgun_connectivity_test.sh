@@ -7,6 +7,8 @@
 sg_lbs_ip=('74.50.63.109' '74.50.63.111')
 sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.')
 
+skip_traceroute=0
+
 # S3
 s3_oregon=sg-media-usor-01.s3.amazonaws.com
 s3_tokyo=sg-media-tokyo.s3.amazonaws.com
@@ -41,18 +43,18 @@ function speedtest {
     python_version="$(python --version 2>&1)"
     substring="Python"
     if [[ "$python_version" == *"Python"* ]]; then
-        echo "Python is installed."
+        echo "INFO: Python is installed."
         speedtest_exec
     else
-        echo "No Python detected. Skipping speedtest."
+        echo "INFO: No Python detected. Skipping speedtest."
     fi
 }
 
 # Execute speedtest using latest version of speedtest-cli. Fall-back on cached version on failure.
 function speedtest_exec {
     # Try to get latest version
-    echo "Trying to fetch latest version of speedtest-cli..."
-    curl --fail https://rw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py -o "speedtest_latest.py"
+    echo "INFO: Trying to fetch latest version of speedtest-cli..."
+    curl --fail https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py -o "speedtest_latest.py"
     if [ $? == 0 ]
     then
         echo "... Success! Using latest version."
@@ -71,7 +73,10 @@ function speedtest_exec {
 function test_endpoint {
     endpoint=$1
     ping -c 10 $endpoint
-    traceroute -w 3 -q 1 -m 15 $endpoint
+
+    if [ $skip_traceroute == 0 ]; then
+        traceroute -w 3 -q 1 -m 15 $endpoint
+    fi
 }
 
 # Test connectivity to Shotgun Load Balancers
@@ -110,7 +115,8 @@ function test_s3_accel {
 function showUsage {
     echo "Usage: bash shotgun_connectivity_test.sh [options]"
     echo "Test connectivity to the Shotgun end-points."
-    echo -e "\t[--all]               Test connectivity to all end-points. Default."
+    echo -e "\t[--short]             Default. Test connectivity to all end-points"
+    echo -e "\t[--all]               Test connectivity to all end-points in depth, executing traceroutes to all end-points."
     echo -e "\t[--cdn]               Test connectivity to Shotgun Web Acceleration Service (CDNetworks)."
     echo -e "\t[--lb]                Test connectivity to Shotgun load balancers."
     echo -e "\t[--s3]                Test connectivity to Shotgun S3 Buckets."
@@ -123,10 +129,19 @@ function showUsage {
     echo -e "\t[-v,--verbose]        Print commands before executing them."
 }
 
+# Activate all tests
+function activate_all_tests {
+    echo "INFO: Short mode active. Skipping trace routes."
+    do_speedtest=1
+    do_test_lbs=1
+    do_test_cdnetworks=1
+    do_test_s3=1
+    do_test_s3a=1
+}
+
 # Parse command-line options
 if [ $# -eq 0 ]; then
-    showUsage
-    exit 0
+    activate_all_tests
 fi
 
 for i in "$@"
@@ -175,12 +190,14 @@ case $i in
     do_speedtest=1
     shift
     ;;
+--short)
+    echo "INFO: Short mode activated. Skipping trace routes."
+    activate_all_tests
+    skip_traceroute=1
+    shift
+    ;;
 --all)
-    do_speedtest=1
-    do_test_lbs=1
-    do_test_cdnetworks=1
-    do_test_s3=1
-    do_test_s3a=1
+    activate_all_tests
     shift
     ;;
 *)
