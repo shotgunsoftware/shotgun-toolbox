@@ -15,9 +15,9 @@ s3_tokyo=sg-media-tokyo.s3.amazonaws.com
 s3_ireland=sg-media-ireland.s3.amazonaws.com
 s3=($s3_oregon $s3_tokyo $s3_ireland)
 
-s3a_oregon=sg-media-usor-01.s3.amazonaws.com
-s3a_tokyo=sg-media-tokyo.s3.amazonaws.com
-s3a_ireland=sg-media-ireland.s3.amazonaws.com
+s3a_oregon=sg-media-usor-01.s3-accelerate.amazonaws.com
+s3a_tokyo=sg-media-tokyo.s3-accelerate.amazonaws.com
+s3a_ireland=sg-media-ireland.s3-accelerate.amazonaws.com
 s3a=($s3a_oregon $s3a_tokyo $s3a_ireland)
 
 # Test funciton header
@@ -180,7 +180,7 @@ case $i in
     do_test_s3=1
     shift
     ;;
---s3)
+--s3a)
     do_test_s3a=1
     shift
     ;;
@@ -227,7 +227,7 @@ if [ -n "$do_test_s3" ]; then
     test_s3
 fi
 
-if [ -n "$test_s3a" ]; then
+if [ -n "$do_test_s3a" ]; then
     test_s3_accel
 fi
 
