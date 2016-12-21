@@ -115,6 +115,8 @@ function test_s3_accel {
 function showUsage {
     echo "Usage: bash shotgun_connectivity_test.sh [options]"
     echo "Test connectivity to the Shotgun end-points."
+    echo "When invoked with no options, default to:"
+    echo "    bash shotgun_connectivity_test.sh --all --short"
     echo -e "\t[--short]             Default. Test connectivity to all end-points"
     echo -e "\t[--all]               Test connectivity to all end-points in depth, executing traceroutes to all end-points."
     echo -e "\t[--cdn]               Test connectivity to Shotgun Web Acceleration Service (CDNetworks)."
@@ -131,7 +133,6 @@ function showUsage {
 
 # Activate all tests
 function activate_all_tests {
-    echo "INFO: Short mode active. Skipping trace routes."
     do_speedtest=1
     do_test_lbs=1
     do_test_cdnetworks=1
@@ -141,7 +142,9 @@ function activate_all_tests {
 
 # Parse command-line options
 if [ $# -eq 0 ]; then
+    echo "INFO: Short mode active. Skipping trace routes."
     activate_all_tests
+    skip_traceroute=1
 fi
 
 for i in "$@"
@@ -192,7 +195,6 @@ case $i in
     ;;
 --short)
     echo "INFO: Short mode activated. Skipping trace routes."
-    activate_all_tests
     skip_traceroute=1
     shift
     ;;
@@ -201,6 +203,8 @@ case $i in
     shift
     ;;
 *)
+    echo "Invalid parameter $i. Aborting"
+    exit 1
     ;;
 esac
 done
