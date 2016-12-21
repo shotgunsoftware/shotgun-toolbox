@@ -116,7 +116,7 @@ function showUsage {
     echo "Usage: bash shotgun_connectivity_test.sh [options]"
     echo "Test connectivity to the Shotgun end-points."
     echo "When invoked with no options, default to:"
-    echo "    bash shotgun_connectivity_test.sh --all --short"
+    echo "    bash shotgun_connectivity_test.sh --all"
     echo -e "\t[--short]             Default. Test connectivity to all end-points"
     echo -e "\t[--all]               Test connectivity to all end-points in depth, executing traceroutes to all end-points."
     echo -e "\t[--cdn]               Test connectivity to Shotgun Web Acceleration Service (CDNetworks)."
@@ -144,7 +144,6 @@ function activate_all_tests {
 if [ $# -eq 0 ]; then
     echo "INFO: Short mode active. Skipping trace routes."
     activate_all_tests
-    skip_traceroute=1
 fi
 
 for i in "$@"
