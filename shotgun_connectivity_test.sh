@@ -142,7 +142,6 @@ function activate_all_tests {
 
 # Parse command-line options
 if [ $# -eq 0 ]; then
-    echo "INFO: Short mode active. Skipping trace routes."
     activate_all_tests
 fi
 

@@ -8,6 +8,8 @@ and connectivity issues. For help, run:
 
     bash shotgun_connectivity_test.sh --help
     
+**Only Mac and Unix is supported.**
+    
 ### Most common configurations
 If you want to diagnose the connectivity to the Shotgun Service end-points only, use the following configuration:
 
