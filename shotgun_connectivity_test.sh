@@ -13,12 +13,14 @@ skip_traceroute=0
 s3_oregon=sg-media-usor-01.s3.amazonaws.com
 s3_tokyo=sg-media-tokyo.s3.amazonaws.com
 s3_ireland=sg-media-ireland.s3.amazonaws.com
-s3=($s3_oregon $s3_tokyo $s3_ireland)
+s3_saopaulo=sg-media-saopaulo.s3.amazonaws.com
+s3=($s3_oregon $s3_tokyo $s3_ireland $s3_saopaulo)
 
 s3a_oregon=sg-media-usor-01.s3-accelerate.amazonaws.com
 s3a_tokyo=sg-media-tokyo.s3-accelerate.amazonaws.com
 s3a_ireland=sg-media-ireland.s3-accelerate.amazonaws.com
-s3a=($s3a_oregon $s3a_tokyo $s3a_ireland)
+s3a_saopaulo=sg-media-saopaulo.s3-accelerate.amazonaws.com
+s3a=($s3a_oregon $s3a_tokyo $s3a_ireland $s3a_saopaulo)
 
 # Test funciton header
 function test_header {
@@ -124,9 +126,10 @@ function showUsage {
     echo -e "\t[--s3]                Test connectivity to Shotgun S3 Buckets."
     echo -e "\t[--s3a]               Test connectivity to Shotgun S3 Accelerated Transfer Buckets."
     echo -e "\t[--speedtest]         Run speedtest."
-    echo -e "\t[--geo_oregon]        Spefically test for the oregon geo."
-    echo -e "\t[--geo_tokyo]         Spefically test for the tokyo geo."
-    echo -e "\t[--geo_ireland]       Spefically test for the ireland geo."
+    echo -e "\t[--geo_oregon]        Test connectivity to the oregon geo."
+    echo -e "\t[--geo_tokyo]         Test connectivity to the tokyo geo."
+    echo -e "\t[--geo_ireland]       Test connectivity to the ireland geo."
+    echo -e "\t[--geo_saopaulo]      Test connectivity to the saopaulo geo."
     echo -e "\t[-h,--help,--usage]   Display help."
     echo -e "\t[-v,--verbose]        Print commands before executing them."
 }
@@ -169,6 +172,11 @@ case $i in
 --geo_tokyo)
     s3=$s3_tokyo
     s3a=$s3a_tokyo
+    shift
+    ;;
+--geo_saopaulo)
+    s3=$s3_saopaulo
+    s3a=$s3a_saopaulo
     shift
     ;;
 --lb)
