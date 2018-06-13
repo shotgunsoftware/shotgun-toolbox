@@ -32,12 +32,12 @@ and connectivity issues. Python 2.7 is required and should be included in the %P
 #### Most common configurations
 If you want to diagnose the connectivity to the Shotgun Service end-points only, use the following configuration:
 
-    bash shotgun_connectivity_test_win.py --speedtest --lb --cdn
+    python shotgun_connectivity_test_win.py --speedtest --lb --cdn
 
 If you want to diagnose only the connectivity to S3, use the following configuration:
 
-    bash shotgun_connectivity_test_win.py --speedtest --s3 --s3a
+    python shotgun_connectivity_test_win.py --speedtest --s3 --s3a
 
 You can also specify the location of your S3 media, if you know it.
 
-    bash shotgun_connectivity_test_win.py --speedtest --s3 --s3a --geo_tokyo
+    python shotgun_connectivity_test_win.py --speedtest --s3 --s3a --geo_tokyo
