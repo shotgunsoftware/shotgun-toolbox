@@ -1,7 +1,4 @@
-# Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
-
 # Python script that run multiple tests to access the state of the Shotgun service.
-# TODO: Re-add *nix support
 import logging as log
 import os
 import sys
