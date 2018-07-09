@@ -24,7 +24,7 @@ You can also specify the location of your S3 media, if you know it.
     bash shotgun_connectivity_test.sh --speedtest --s3 --s3a --geo_tokyo
 
 ### Windows
-    *Special thanks to [Adric Worley](https://github.com/AdricEpic) (Epic Games, Inc.) for contributing the initial release of this Windows port.*
+*Special thanks to [Adric Worley](https://github.com/AdricEpic) (Epic Games, Inc.) for contributing the initial release of this Windows port.*
 `shotgun_connectivity_test_win.py` will run an set of tests that will help Shotgun Support team troubleshoot networking
 and connectivity issues. Python 2.7 is required and should be included in the %PATH% environment variable. For help, run:
 
