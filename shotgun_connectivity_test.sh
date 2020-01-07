@@ -5,7 +5,8 @@
 # Globals
 # Warning: These IPs are subject to change.
 sg_lbs_ip=('74.50.63.109' '74.50.63.111')
-sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.' 'wildcard-origin-cloud.shotgunstudio.com')
+sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.')
+sg_cdnetwork_cname_no_ping=('wildcard-origin-cloud.shotgunstudio.com')
 
 skip_traceroute=0
 
@@ -13,14 +14,18 @@ skip_traceroute=0
 s3_oregon=sg-media-usor-01.s3.amazonaws.com
 s3_tokyo=sg-media-tokyo.s3.amazonaws.com
 s3_ireland=sg-media-ireland.s3.amazonaws.com
+s3_mumbai=sg-media-mumbai.s3.amazonaws.com
 s3_saopaulo=sg-media-saopaulo.s3.amazonaws.com
-s3=($s3_oregon $s3_tokyo $s3_ireland $s3_saopaulo)
+s3_sydney=sg-media-sydney.s3.amazonaws.com
+s3=($s3_oregon $s3_tokyo $s3_ireland $s3_mumbai $s3_saopaulo $s3_sydney)
 
 s3a_oregon=sg-media-usor-01.s3-accelerate.amazonaws.com
 s3a_tokyo=sg-media-tokyo.s3-accelerate.amazonaws.com
 s3a_ireland=sg-media-ireland.s3-accelerate.amazonaws.com
+s3a_mumbai=sg-media-mumbai.s3-accelerate.amazonaws.com
 s3a_saopaulo=sg-media-saopaulo.s3-accelerate.amazonaws.com
-s3a=($s3a_oregon $s3a_tokyo $s3a_ireland $s3a_saopaulo)
+s3a_sydney=sg-media-sydney.s3-accelerate.amazonaws.com
+s3a=($s3a_oregon $s3a_tokyo $s3a_ireland $s3a_mumbai $s3a_saopaulo $s3a_sydney)
 
 # Test funciton header
 function test_header {
@@ -74,7 +79,17 @@ function speedtest_exec {
 # Test connectivity to given end-point
 function test_endpoint {
     endpoint=$1
-    ping -c 10 $endpoint
+    no_ping=$2
+
+    if ! [ $no_ping == 1 ]; then
+        ping -c 10 $endpoint
+    elif type "telnet" > /dev/null; then
+        telnet $1 80
+    elif type "nc" > /dev/null; then
+        nc -vz $1 80
+    else
+        echo "Please install/enable telnet or netcat to test connectivity to $1"
+    fi
 
     if [ $skip_traceroute == 0 ]; then
         traceroute -w 3 -q 1 -m 15 $endpoint
@@ -94,6 +109,11 @@ function test_cdnetworks {
     for i in ${sg_cdnetwork_cname[@]}; do
         test_header "Testing connectivity to Shotgun through CDNetworks: $i"
         test_endpoint $i
+    done
+
+    for i in ${sg_cdnetwork_cname_no_ping[@]}; do
+        test_header "Testing connectivity to Shotgun through CDNetworks: $i"
+        test_endpoint $i 1
     done
 }
 
