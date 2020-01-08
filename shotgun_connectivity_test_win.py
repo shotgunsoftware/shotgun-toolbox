@@ -3,6 +3,7 @@ import logging as log
 import os
 import sys
 import urllib2
+import socket
 
 from argparse import ArgumentParser
 from subprocess import Popen, PIPE, STDOUT
@@ -23,7 +24,8 @@ log.getLogger().addHandler(stream_handler)
 # Globals
 # Warning: These IPs are subject to change.
 sg_lbs_ip = ['74.50.63.109', '74.50.63.111']
-sg_cdnetwork_cnames = ['wildcard-geo.shotgunstudio.com', 'wildcard-cdn.shotgunstudio.com.', 'wildcard-origin-cloud.shotgunstudio.com']
+sg_cdnetwork_cnames = ['wildcard-geo.shotgunstudio.com', 'wildcard-cdn.shotgunstudio.com.']
+sg_cdnetwork_cnames_no_ping = ['wildcard-origin-cloud.shotgunstudio.com']
 
 skip_tracetoute = False
 
@@ -31,14 +33,18 @@ skip_tracetoute = False
 s3_oregon = "sg-media-usor-01.s3.amazonaws.com"
 s3_tokyo = "sg-media-tokyo.s3.amazonaws.com"
 s3_ireland = "sg-media-ireland.s3.amazonaws.com"
+s3_mumbai = "sg-media-mumbai.s3.amazonaws.com"
 s3_saopaulo = "sg-media-saopaulo.s3.amazonaws.com"
-s3 = [s3_oregon, s3_tokyo, s3_ireland, s3_saopaulo]
+s3_sydney = "sg-media-sydney.s3.amazonaws.com"
+s3 = [s3_oregon, s3_tokyo, s3_ireland, s3_mumbai, s3_saopaulo, s3_sydney]
 
 s3a_oregon = "sg-media-usor-01.s3-accelerate.amazonaws.com"
 s3a_tokyo = "sg-media-tokyo.s3-accelerate.amazonaws.com"
 s3a_ireland = "sg-media-ireland.s3-accelerate.amazonaws.com"
+s3a_mumbai = "sg-media-mumbai.s3-accelerate.amazonaws.com"
 s3a_saopaulo = "sg-media-saopaulo.s3-accelerate.amazonaws.com"
-s3a = [s3a_oregon, s3a_tokyo, s3a_ireland, s3a_saopaulo]
+s3a_sydney = "sg-media-sydney.s3-accelerate.amazonaws.com"
+s3a = [s3a_oregon, s3a_tokyo, s3a_ireland, s3a_mumbai, s3a_saopaulo, s3a_sydney]
 
 
 def print_header(title):
@@ -60,8 +66,15 @@ def ping_benchmark():
     run_subprocess("ping", "-n", "5", "8.8.8.8")
 
 
-def test_endpoint(endpoint):
-    run_subprocess("ping", "-n", "10", endpoint)
+def test_endpoint(endpoint, ping=True):
+    if ping:
+        run_subprocess("ping", "-n", "10", endpoint)
+    else:
+        try:
+          socket.create_connection((endpoint, 80), timeout=5)
+          log.info("Successfully created connection to %s", endpoint)
+        except socket.timeout:
+          log.info("Failed to create connection to %s", endpoint)
 
     if not skip_tracetoute:
         # traceroute -w 3 -q 1 -m 15 $endpoint
@@ -109,6 +122,10 @@ def test_cdnetworks():
     for cname in sg_cdnetwork_cnames:
         print_header("Testing connectivity to Shotgun through CDNetworks: {}".format(cname))
         test_endpoint(cname)
+
+    for cname in sg_cdnetwork_cnames_no_ping:
+        print_header("Testing connectivity to Shotgun through CDNetworks: {}".format(cname))
+        test_endpoint(cname, ping=False)
 
 
 def test_s3():
