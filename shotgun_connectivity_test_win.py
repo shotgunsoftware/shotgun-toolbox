@@ -23,7 +23,7 @@ log.getLogger().addHandler(stream_handler)
 
 # Globals
 # Warning: These IPs are subject to change.
-sg_lbs_ip = ['74.50.63.109', '74.50.63.111']
+sg_lbs_ip = ['74.50.63.109', '74.50.63.111', '13.248.152.42', '76.223.30.16']
 sg_cdnetwork_cnames = ['wildcard-geo.shotgunstudio.com', 'wildcard-cdn.shotgunstudio.com.']
 sg_cdnetwork_cnames_no_ping = ['wildcard-origin-cloud.shotgunstudio.com']
 
