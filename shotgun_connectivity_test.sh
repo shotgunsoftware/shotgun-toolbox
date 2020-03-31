@@ -4,7 +4,7 @@
 
 # Globals
 # Warning: These IPs are subject to change.
-sg_lbs_ip=('74.50.63.109' '74.50.63.111')
+sg_lbs_ip=('74.50.63.109' '74.50.63.111', '13.248.152.42', '76.223.30.16')
 sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.')
 sg_cdnetwork_cname_no_ping=('wildcard-origin-cloud.shotgunstudio.com')
 
