@@ -4,7 +4,7 @@
 
 # Globals
 # Warning: These IPs are subject to change.
-sg_lbs_ip=('74.50.63.109' '74.50.63.111', '13.248.152.42', '76.223.30.16')
+sg_lbs_ip=('74.50.63.109' '74.50.63.111' '13.248.152.42' '76.223.30.16')
 sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.')
 sg_cdnetwork_cname_no_ping=('wildcard-origin-cloud.shotgunstudio.com')
 
@@ -81,7 +81,7 @@ function test_endpoint {
     endpoint=$1
     no_ping=$2
 
-    if ! [ $no_ping == 1 ]; then
+    if ! [ "$no_ping" == 1 ]; then
         ping -c 10 $endpoint
     elif type "telnet" > /dev/null; then
         telnet $1 80
@@ -91,7 +91,7 @@ function test_endpoint {
         echo "Please install/enable telnet or netcat to test connectivity to $1"
     fi
 
-    if [ $skip_traceroute == 0 ]; then
+    if [ "$skip_traceroute" == 0 ]; then
         traceroute -w 3 -q 1 -m 15 $endpoint
     fi
 }
