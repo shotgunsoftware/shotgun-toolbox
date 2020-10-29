@@ -23,9 +23,7 @@ log.getLogger().addHandler(stream_handler)
 
 # Globals
 # Warning: These IPs are subject to change.
-sg_lbs_ip = ['74.50.63.109', '74.50.63.111', '13.248.152.42', '76.223.30.16']
-sg_cdnetwork_cnames = ['wildcard-geo.shotgunstudio.com', 'wildcard-cdn.shotgunstudio.com.']
-sg_cdnetwork_cnames_no_ping = ['wildcard-origin-cloud.shotgunstudio.com']
+sg_lbs_ip = ['13.248.152.42', '76.223.30.16']
 
 skip_tracetoute = False
 
@@ -118,16 +116,6 @@ def test_lbs():
         test_endpoint(ip)
 
 
-def test_cdnetworks():
-    for cname in sg_cdnetwork_cnames:
-        print_header("Testing connectivity to Shotgun through CDNetworks: {}".format(cname))
-        test_endpoint(cname)
-
-    for cname in sg_cdnetwork_cnames_no_ping:
-        print_header("Testing connectivity to Shotgun through CDNetworks: {}".format(cname))
-        test_endpoint(cname, ping=False)
-
-
 def test_s3():
     for s3_addr in s3:
         print_header("Testing connectivity to Shotgun S3 Bucket: {}".format(s3_addr))
@@ -140,11 +128,9 @@ def test_s3_accel():
         test_endpoint(s3_addr)
 
 
-def run_tests(do_lbs, do_cdnetworks, do_s3, do_s3a, do_speedtest):
+def run_tests(do_lbs, do_s3, do_s3a, do_speedtest):
     if do_lbs:
         test_lbs()
-    if do_cdnetworks:
-        test_cdnetworks()
     if do_s3:
         test_s3()
     if do_s3a:
@@ -161,8 +147,6 @@ if __name__ == '__main__':
     parser.add_argument("--short", help="Default. Test connectivity to all end-points.",
                         action="store_true")
     parser.add_argument("--all", help="Test connectivity to all end-points in depth; executes traceroutes to all end-points.",
-                        action="store_true")
-    parser.add_argument("--cdn", help="Test connectivity to Shotgun Web Acceleration Service (CDNetworks).",
                         action="store_true")
     parser.add_argument("--lb", help="Test connectivity to Shotgun load balancers.",
                         action="store_true")
@@ -186,7 +170,6 @@ if __name__ == '__main__':
     if (len(sys.argv) <= 1) or (len(sys.argv) == 2 and cmd_args.short) or cmd_args.all:
         cmd_args.speedtest = True
         cmd_args.lb = True
-        cmd_args.cdn = True
         cmd_args.s3 = True
         cmd_args.s3a = True
 
@@ -205,4 +188,4 @@ if __name__ == '__main__':
         s3 = s3_saopaulo
         s3a = s3a_saopaulo
 
-    run_tests(cmd_args.lb, cmd_args.cdn, cmd_args.s3, cmd_args.s3a, cmd_args.speedtest)
+    run_tests(cmd_args.lb, cmd_args.s3, cmd_args.s3a, cmd_args.speedtest)

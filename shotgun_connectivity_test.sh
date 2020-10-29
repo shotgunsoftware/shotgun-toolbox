@@ -4,9 +4,7 @@
 
 # Globals
 # Warning: These IPs are subject to change.
-sg_lbs_ip=('74.50.63.109' '74.50.63.111' '13.248.152.42' '76.223.30.16')
-sg_cdnetwork_cname=('wildcard-geo.shotgunstudio.com' 'wildcard-cdn.shotgunstudio.com.')
-sg_cdnetwork_cname_no_ping=('wildcard-origin-cloud.shotgunstudio.com')
+sg_lbs_ip=('13.248.152.42' '76.223.30.16')
 
 skip_traceroute=0
 
@@ -104,19 +102,6 @@ function test_lbs {
     done
 }
 
-# Test connectivity to Shotgun through CDNetworks
-function test_cdnetworks {
-    for i in ${sg_cdnetwork_cname[@]}; do
-        test_header "Testing connectivity to Shotgun through CDNetworks: $i"
-        test_endpoint $i
-    done
-
-    for i in ${sg_cdnetwork_cname_no_ping[@]}; do
-        test_header "Testing connectivity to Shotgun through CDNetworks: $i"
-        test_endpoint $i 1
-    done
-}
-
 # Test connectivity to Shotgun S3 Buckets
 function test_s3 {
     for i in ${s3[@]}; do
@@ -141,7 +126,6 @@ function showUsage {
     echo "    bash shotgun_connectivity_test.sh --all"
     echo -e "\t[--short]             Default. Test connectivity to all end-points"
     echo -e "\t[--all]               Test connectivity to all end-points in depth, executing traceroutes to all end-points."
-    echo -e "\t[--cdn]               Test connectivity to Shotgun Web Acceleration Service (CDNetworks)."
     echo -e "\t[--lb]                Test connectivity to Shotgun load balancers."
     echo -e "\t[--s3]                Test connectivity to Shotgun S3 Buckets."
     echo -e "\t[--s3a]               Test connectivity to Shotgun S3 Accelerated Transfer Buckets."
@@ -158,7 +142,6 @@ function showUsage {
 function activate_all_tests {
     do_speedtest=1
     do_test_lbs=1
-    do_test_cdnetworks=1
     do_test_s3=1
     do_test_s3a=1
 }
@@ -211,10 +194,6 @@ case $i in
     do_test_s3a=1
     shift
     ;;
---cdn)
-    do_test_cdnetworks=1
-    shift
-    ;;
 --speedtest)
     do_speedtest=1
     shift
@@ -244,10 +223,6 @@ fi
 
 if [ -n "$do_test_lbs" ]; then
     test_lbs
-fi
-
-if [ -n "$do_test_cdnetworks" ]; then
-    test_cdnetworks
 fi
 
 if [ -n "$do_test_s3" ]; then

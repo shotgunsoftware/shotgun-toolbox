@@ -13,7 +13,7 @@ and connectivity issues. For help, run:
 #### Most common configurations
 If you want to diagnose the connectivity to the Shotgun Service end-points only, use the following configuration:
 
-    bash shotgun_connectivity_test.sh --speedtest --lb --cdn
+    bash shotgun_connectivity_test.sh --speedtest --lb
 
 If you want to diagnose only the connectivity to S3, use the following configuration:
 
@@ -33,7 +33,7 @@ and connectivity issues. Python 2.7 is required and should be included in the %P
 #### Most common configurations
 If you want to diagnose the connectivity to the Shotgun Service end-points only, use the following configuration:
 
-    python shotgun_connectivity_test_win.py --speedtest --lb --cdn
+    python shotgun_connectivity_test_win.py --speedtest --lb
 
 If you want to diagnose only the connectivity to S3, use the following configuration:
 
